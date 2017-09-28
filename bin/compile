@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o errexit
+
 indent() {
   sed -u 's/^/       /'
 }
@@ -44,11 +46,11 @@ downloadAndInstall() {
 }
 
 echo "-----> Download and install nodejs…"
-downloadAndInstall "$NODE_URL" "$NODE_TARGET"
+downloadAndInstall "$NODE_URL" "$NODE_TARGET" "$NODE_TMPFILE"
 echo "Installed node.js $(node --version)"|indent
 
 echo "-----> Download and install yarn…"
-downloadAndInstall "$YARN_URL" "$YARN_TARGET"
+downloadAndInstall "$YARN_URL" "$YARN_TARGET" "$YARN_TMPFILE"
 echo "Installed yarn $(yarn --version)"|indent
 
 echo "-----> Persist bin paths in environment variables…"
