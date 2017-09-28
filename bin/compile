@@ -9,6 +9,7 @@ indent() {
 BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
+BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
 
 NODE_TARGET="$BUILD_DIR/.heroku/vendor/node"
 NODE_VERSION="v6.11.3"
@@ -51,3 +52,7 @@ echo "Installed node.js $(node --version)"|indent
 echo "-----> Download and install yarn…"
 downloadAndInstall "$YARN_URL" "$YARN_TARGET" "$YARN_TMPFILE"
 echo "Installed yarn $(yarn --version)"|indent
+
+echo "-----> Copy over .profile.d scripts"
+mkdir -p $BUILD_DIR/.profile.d
+cp $BP_DIR/.profile.d/*.sh $build_dir/.profile.d/
