@@ -26,7 +26,6 @@ downloadAndInstall() {
     local tmpfile="$CACHE_DIR/$3"
 
     echo "Clean up directories"|indent
-    rm $tmpfile
     rm -rf $target
     mkdir -p "$target"
 
