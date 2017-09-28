@@ -10,7 +10,7 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
-NODE_TARGET="$BUILD_DIR/.heroku/vendor/nodejs"
+NODE_TARGET="$BUILD_DIR/.heroku/vendor/node"
 NODE_VERSION="v6.11.3"
 NODE_URL="https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.gz"
 NODE_TMPFILE="node-${NODE_VERSION}.tar.gz"
@@ -51,8 +51,3 @@ echo "Installed node.js $(node --version)"|indent
 echo "-----> Download and install yarn…"
 downloadAndInstall "$YARN_URL" "$YARN_TARGET" "$YARN_TMPFILE"
 echo "Installed yarn $(yarn --version)"|indent
-
-echo "-----> Persist bin paths in environment variables…"
-echo "$NODE_TARGET/bin" > "$ENV_DIR/NODE_BIN_PATH"
-echo "$YARN_TARGET/bin" > "$ENV_DIR/YARN_BIN_PATH"
-echo "Done."|indent
