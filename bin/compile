@@ -30,7 +30,7 @@ downloadAndInstall() {
     local response_status=`curl "$source_url" -L --silent --fail --retry 5 --retry-max-time 15 -o $tmpfile --write-out "%{http_code}"`
     if [ "$response_status" != "200" ]; then
         echo "Unable to download $url: $response_status"|indent
-        return 1
+        exit 1
     fi
 
     echo "Extract archive"|indent
