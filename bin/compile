@@ -12,7 +12,7 @@ ENV_DIR=${3:-}
 
 NODE_TARGET="$BUILD_DIR/.heroku/vendor/nodejs"
 NODE_VERSION="v6.11.3"
-NODE_URL="https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz"
+NODE_URL="https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.gz"
 NODE_TMPFILE="node-${NODE_VERSION}.tar.gz"
 
 YARN_TARGET="$BUILD_DIR/.heroku/vendor/yarn"
