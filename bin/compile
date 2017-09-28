@@ -1,0 +1,55 @@
+#!/bin/bash
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+BUILD_DIR=${1:-}
+CACHE_DIR=${2:-}
+ENV_DIR=${3:-}
+
+NODE_TARGET="$BUILD_DIR/.heroku/vendor/nodejs"
+NODE_VERSION="v6.11.3"
+NODE_URL="https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz"
+
+YARN_TARGET="$BUILD_DIR/.heroku/vendor/yarn"
+YARN_VERSION="v1.1.0"
+YARN_URL="https://github.com/yarnpkg/yarn/releases/download/$YARN_VERSION/yarn-$YARN_VERSION.tar.gz"
+
+downloadAndInstall() {
+    local url=$1
+    local target=$2
+    local tmpfile="/tmp/archive.tar.gz"
+
+    echo "Clean up directories" | indent
+    rm $tmpfile
+    rm -rf $target
+    mkdir -p "$target"
+
+    echo "Download archive from $url" | indent
+    local response_status=`curl "$source_url" -L --silent --fail --retry 5 --retry-max-time 15 -o $tmpfile --write-out "%{http_code}"`
+    if [ "$response_status" != "200" ]; then
+        echo "Unable to download $url: $response_status" | indent
+        return false
+    fi
+
+    echo "Extract archive" | indent
+    tar xzf $tmpfile -C "$target" --strip 1
+    rm $tmpfile
+
+    echo "Mark binaries executable" | indent
+    chmod +x $target/bin/*
+}
+
+echo "-----> Download and install nodejs…"
+downloadAndInstall "$NODE_URL" "$NODE_TARGET"
+echo "Installed node.js $(node --version)" | indent
+
+echo "-----> Download and install yarn…"
+downloadAndInstall "$YARN_URL" "$YARN_TARGET"
+echo "Installed yarn $(yarn --version)" | indent
+
+echo "-----> Persist bin paths in environment variables…"
+echo "$NODE_TARGET/bin" > "$ENV_DIR/NODE_BIN_PATH"
+echo "$YARN_TARGET/bin" > "$ENV_DIR/YARN_BIN_PATH"
+echo "Done." | indent
