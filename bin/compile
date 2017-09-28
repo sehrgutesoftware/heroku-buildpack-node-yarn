@@ -21,7 +21,7 @@ YARN_URL="https://github.com/yarnpkg/yarn/releases/download/$YARN_VERSION/yarn-$
 YARN_TMPFILE="yarn-${YARN_VERSION}.tar.gz"
 
 downloadAndInstall() {
-    local url=$1
+    local source_url=$1
     local target=$2
     local tmpfile="$CACHE_DIR/$3"
 
@@ -32,8 +32,8 @@ downloadAndInstall() {
     if [ -e "$tmpfile" ]; then
         echo "Using archive from cache"|indent
     else
-        echo "Download archive from $url"|indent
-        curl "$source_url" -L --retry 5 --retry-max-time 15 -o $tmpfile
+        echo "Download archive from $source_url"|indent
+        curl "$source_url" -L --silent --fail --retry 5 --retry-max-time 15 -o "$tmpfile"
     fi
 
     echo "Extract archive"|indent
