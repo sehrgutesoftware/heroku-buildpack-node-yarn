@@ -26,30 +26,30 @@ downloadAndInstall() {
     rm -rf $target
     mkdir -p "$target"
 
-    echo "Download archive from $url" | indent
+    echo "Download archive from $url"|indent
     local response_status=`curl "$source_url" -L --silent --fail --retry 5 --retry-max-time 15 -o $tmpfile --write-out "%{http_code}"`
     if [ "$response_status" != "200" ]; then
-        echo "Unable to download $url: $response_status" | indent
+        echo "Unable to download $url: $response_status"|indent
         return false
     fi
 
-    echo "Extract archive" | indent
+    echo "Extract archive"|indent
     tar xzf $tmpfile -C "$target" --strip 1
     rm $tmpfile
 
-    echo "Mark binaries executable" | indent
+    echo "Mark binaries executable"|indent
     chmod +x $target/bin/*
 }
 
 echo "-----> Download and install nodejs…"
 downloadAndInstall "$NODE_URL" "$NODE_TARGET"
-echo "Installed node.js $(node --version)" | indent
+echo "Installed node.js $(node --version)"|indent
 
 echo "-----> Download and install yarn…"
 downloadAndInstall "$YARN_URL" "$YARN_TARGET"
-echo "Installed yarn $(yarn --version)" | indent
+echo "Installed yarn $(yarn --version)"|indent
 
 echo "-----> Persist bin paths in environment variables…"
 echo "$NODE_TARGET/bin" > "$ENV_DIR/NODE_BIN_PATH"
 echo "$YARN_TARGET/bin" > "$ENV_DIR/YARN_BIN_PATH"
-echo "Done." | indent
+echo "Done."|indent
