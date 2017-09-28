@@ -11,26 +11,28 @@ ENV_DIR=${3:-}
 NODE_TARGET="$BUILD_DIR/.heroku/vendor/nodejs"
 NODE_VERSION="v6.11.3"
 NODE_URL="https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz"
+NODE_TMPFILE="node-${NODE_VERSION}.tar.gz"
 
 YARN_TARGET="$BUILD_DIR/.heroku/vendor/yarn"
 YARN_VERSION="v1.1.0"
 YARN_URL="https://github.com/yarnpkg/yarn/releases/download/$YARN_VERSION/yarn-$YARN_VERSION.tar.gz"
+YARN_TMPFILE="yarn-${YARN_VERSION}.tar.gz"
 
 downloadAndInstall() {
     local url=$1
     local target=$2
-    local tmpfile="/tmp/archive.tar.gz"
+    local tmpfile="$CACHE_DIR/$3"
 
     echo "Clean up directories"|indent
     rm $tmpfile
     rm -rf $target
     mkdir -p "$target"
 
-    echo "Download archive from $url"|indent
-    local response_status=`curl "$source_url" -L --silent --fail --retry 5 --retry-max-time 15 -o $tmpfile --write-out "%{http_code}"`
-    if [ "$response_status" != "200" ]; then
-        echo "Unable to download $url: $response_status"|indent
-        exit 1
+    if [ -e "$tmpfile" ]; then
+        echo "Using archive from cache"|indent
+    else
+        echo "Download archive from $url"|indent
+        curl "$source_url" -L --retry 5 --retry-max-time 15 -o $tmpfile
     fi
 
     echo "Extract archive"|indent
